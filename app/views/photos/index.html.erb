@@ -27,9 +27,9 @@
                <h3>
                 <%= photo.caption %>
                 <% favorite = Favorite.where(:photo_id => photo.id, :user_id => current_user.id).first %>
-                <% if favorite %>
-                  <small>favorite</small>
-                <% end %>
+                  <% if favorite %>
+                    <small>favorite</small>
+                  <% end %>
                </h3>
                <div>
                 <%= link_to photo_url(photo.id), :class => "btn btn-primary" do   %>
@@ -75,6 +75,8 @@
             <% end %>
             <!-- Validation failure messages -->
 
+            <br>
+
             <% if @comment.errors.any? %>
               <% @comment.errors.full_messages.each do |message| %>
                 <div class="alert alert-dismissable alert-danger">
@@ -87,58 +89,18 @@
             <!-- Responsive panel example -->
 
             <div class="row">
-              <div class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8">
-                <div class="panel panel-default">
-                  <div class="panel-heading">
-                    <h3 class="panel-title">Add Comment</h3>
-                  </div>
-                  <div class="panel-body">
-                    <%= form_tag comments_url, :method => "post", :class => "form-horizontal" do %>
-                      <!-- Label and input for user_id -->
-                      <div class="form-group">
-                        <label for="user_id" class="col-sm-2 control-label">
-                          User
-                        </label>
-                        <div class="col-sm-10">
-                          <select name="user_id" id="user_id">
-                            <% User.all.each do |user| %>
-                              <option value="<%= user.id %>"><%= user.name %></option>
-                            <% end %>
-                          </select>
-                          <!-- <input type="text" id="user_id" name="user_id" placeholder="User" class="form-control" value="<%= @comment.user_id %>"> -->
-                        </div>
-                      </div>
-
-                      <!-- Label and input for photo_id -->
-                      <div class="form-group">
-                        <div class="col-sm-10">
-                          <input type="hidden" name="photo_id" id="photo_id" value="<%= photo.id %>">
-                          <%#= select_tag "photo_id", options_from_collection_for_select(Photo.all, 'id', 'caption' ) %>
-                          <!-- <input type="text" id="photo_id" name="photo_id" placeholder="Photo" class="form-control" value="<%= @comment.photo_id %>"> -->
-                        </div>
-                      </div>
-
-                      <!-- Label and input for contents -->
-                      <div class="form-group">
-                        <label for="contents" class="col-sm-2 control-label">
-                          Contents
-                        </label>
-                        <div class="col-sm-10">
-                          <textarea id="contents" name="contents" placeholder="Contents" class="form-control" rows="3"><%= @comment.contents %></textarea>
-                        </div>
-                      </div>
-
-                      <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
-                          <input type="submit" value="Create Comment" class="btn btn-success">
-                          or
-                          <a href="/comments">Cancel</a>
-                        </div>
-                      </div>
-                    <% end %>
-                  </div>
-                </div>
-              </div>
+              <% if user_signed_in? %>
+                <%= form_tag comments_url, :method => "post", :class => "form-horizontal" do %>
+                    <!-- Label and input for user_id -->
+                    <input type="hidden" name="user_id" id="user_id" value="<%= current_user.id %>">
+                    <!-- Label and input for photo_id -->
+                    <input type="hidden" name="photo_id" id="photo_id" value="<%= photo.id %>">
+                    <!-- Label and input for contents -->
+                    <div class="media-body">
+                      <input id="contents" name="contents" placeholder="Add a comment..." class="form-control" rows="3"><%= @comment.contents %></input>
+                    </div>
+                <% end %>
+              <% end %>
             </div>
 
             <!-- End responsive panel example -->

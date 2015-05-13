@@ -50,5 +50,6 @@ end
   def index
     @photos = Photo.all
     @comment = Comment.new
+    @users = User.all
   end
 end
